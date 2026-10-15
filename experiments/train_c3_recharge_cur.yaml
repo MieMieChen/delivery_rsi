@@ -45,7 +45,7 @@ envs:
       # under a cap has no denominator to game.
       difficulty: endless
       adaptive: true
-    adaptive_mix: 0.3
+      adaptive_mix: 0.3
       enable_earning_jitter: true
       enable_food_temperature: true
       enable_special_notes: true
@@ -121,7 +121,7 @@ envs:
       # under a cap has no denominator to game.
       difficulty: endless
       adaptive: true
-    adaptive_mix: 0.3
+      adaptive_mix: 0.3
       enable_earning_jitter: true
       enable_food_temperature: true
       enable_special_notes: true

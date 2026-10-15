@@ -42,7 +42,7 @@ envs:
       # under a cap has no denominator to game.
       difficulty: endless
       adaptive: true
-    adaptive_mix: 0.3
+      adaptive_mix: 0.3
       queue_depth: 1
       stride: block
       embodiment: human_on_foot
@@ -118,7 +118,7 @@ envs:
       # under a cap has no denominator to game.
       difficulty: endless
       adaptive: true
-    adaptive_mix: 0.3
+      adaptive_mix: 0.3
       queue_depth: 1
       stride: block
       embodiment: human_on_foot
