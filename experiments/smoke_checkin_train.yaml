@@ -1,0 +1,32 @@
+# Smoke test, NOT a paper experiment: a hand-written non-delivery task
+# (embodiedbench/tasks/checkin.py) through TaskPlugin -> CheckInEnv -> TaskGymEnv
+# -> the unmodified GRPO stack. Launched by scripts/smoke/run_checkin_smoke.sh,
+# which registers the env as +env_registry.TaskEnv=...vagen_task_env.TaskGymEnv.
+#
+# Text-only (no album_root), so it needs no image albums on the node. Seeds
+# 0-127 train; validation uses 1000-1007, disjoint.
+envs:
+  - name: TaskEnv
+    n_envs: 128
+    data_source: checkin_train
+    seed: [0, 127, 1]
+    # The ceiling finishes two stops in about 8-10 turns at block stride and the
+    # text floor in about 20; 20 turns leaves a weak policy room to reach one.
+    max_turns: 20
+    response_length_per_turn: 256
+    config:
+      task: checkin
+      task_config:
+        stops: 2
+        min_leg_cm: 3000
+        max_leg_cm: 12000
+        step_budget: 20
+      stride: block
+      embodiment: human_on_foot
+      # Ends the episode on the same turn the agent loop would, so the
+      # per-episode log line is always written.
+      max_turns: 20
+      # Training-time shaping toward the current stop, potential-based. The
+      # ledger reward already pays arrival (0.2) and check-in (1.0); this only
+      # separates samples that got nowhere. Never in the verifier's verdict.
+      progress_weight: 0.1

@@ -618,9 +618,9 @@ class CourierGymEnv(_base_class()):  # type: ignore[misc]
         # few pixels wide to read.
         if self.image_max_side:
             kwargs["served_long_edge"] = float(self.image_max_side)
-        self._env = CourierEnv(self._network, **kwargs)
+        self._env = self._make_world(CourierEnv, kwargs)
         self._env.reset()
-        self._session = CourierSession(self._env, city=self.city)
+        self._session = self._make_session(CourierSession, self._env)
         self._turns = 0
         self._progress_cm = 0.0
         self._last_earnings = 0.0
@@ -848,6 +848,15 @@ class CourierGymEnv(_base_class()):  # type: ignore[misc]
         info["rests"] = int(summary.get("rests") or 0)
         info["stamina_left"] = float(summary.get("stamina_left") or 0.0)
         return obs, reward, done, info
+
+    def _make_world(self, default_cls: type, kwargs: dict[str, Any]) -> Any:
+        """The world for this episode. A hook, so a task env can supply its own
+        (``vagen_task_env.TaskGymEnv``); here it is the courier city as before."""
+        return default_cls(self._network, **kwargs)
+
+    def _make_session(self, default_cls: type, world: Any) -> Any:
+        """The harness for this episode's world. Same hook, same default."""
+        return default_cls(world, city=self.city)
 
     async def close(self) -> None:
         if self._scratch is not None:

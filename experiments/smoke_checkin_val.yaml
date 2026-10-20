@@ -1,0 +1,22 @@
+# Smoke test validation for the checkin task; see smoke_checkin_train.yaml.
+# Same task and turn budget, seeds disjoint from training, no shaping: the
+# validation reward is the ledger reward alone. tools/checkin_reference.py
+# reads this block to score the floor and ceiling on exactly these episodes.
+envs:
+  - name: TaskEnv
+    n_envs: 8
+    data_source: checkin_val
+    seed: [1000, 1007, 1]
+    max_turns: 20
+    response_length_per_turn: 256
+    config:
+      task: checkin
+      task_config:
+        stops: 2
+        min_leg_cm: 3000
+        max_leg_cm: 12000
+        step_budget: 20
+      stride: block
+      embodiment: human_on_foot
+      max_turns: 20
+      progress_weight: 0.0

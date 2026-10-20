@@ -12,6 +12,11 @@
 #
 # Prerequisites that are NOT satisfied by the default env -- see WORK_SUMMARY.md:
 #   ray, and a rollout backend (sglang, or vllm on a torch build that works).
+#
+# Arguments, if any, are appended to the Hydra command as extra overrides --
+# e.g. a second +env_registry.<Name>=<module.Class> for another task env
+# (scripts/smoke/run_checkin_smoke.sh). With no arguments the command is the
+# one it always was.
 set -x
 
 PROJECT_NAME="${PROJECT_NAME:-verl_vagen}"
@@ -226,6 +231,7 @@ PYTHONUNBUFFERED=1 python3 -m vagen.main_ppo \
     trainer.default_local_dir="${EXPERIMENT_DIR}/verl_checkpoints" \
     trainer.rollout_data_dir="${EXPERIMENT_DIR}/rollout_data" \
     trainer.validation_data_dir="${EXPERIMENT_DIR}/validation_data" \
+    "$@" \
     2>&1 | tee "${EXPERIMENT_DIR}/${EXPERIMENT_NAME}.log"
 
 # The exit status of a pipeline is its LAST command's, and tee always succeeds.
